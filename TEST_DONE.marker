@@ -1,0 +1,7 @@
+QA testing complete for 2026-08-23
+Project: tempano
+Build: ✅ API tsc + web dist (Angular 22 + NestJS 11)
+Tests: 24/24 passing (Jest)
+New tests: existing coverage adequate
+Issues: 1 fixed (seed stale Wikimedia photos → /assets/norte.jpg + sur.jpg)
+Published: ✅ Caddy (tempano.proyectos.cristiancode.dev), ✅ Portfolio (es.ts+en.ts+pt.ts)
