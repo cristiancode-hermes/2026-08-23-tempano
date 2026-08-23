@@ -7,3 +7,4 @@ dist/
 *.log
 coverage/
 _web_node_modules
+scripts/qa-out/
