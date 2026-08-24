@@ -71,6 +71,10 @@ export class ApiService {
     return this.http.get<any>(`${API}/bookings/${id}`);
   }
 
+  ticket(code: string) {
+    return this.http.get<any>(`${API}/bookings/ticket/${encodeURIComponent(code)}`);
+  }
+
   cancel(id: number) {
     return this.http.post<any>(`${API}/bookings/${id}/cancel`, {});
   }

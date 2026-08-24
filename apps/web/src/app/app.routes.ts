@@ -10,6 +10,7 @@ export const routes: Routes = [
     loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
     children: [
       { path: '', loadComponent: () => import('./pages/home.page').then((m) => m.HomePageComponent) },
+      { path: 'sesion/:code', loadComponent: () => import('./pages/session-ticket.page').then((m) => m.SessionTicketPageComponent) },
       { path: 'pistas', loadComponent: () => import('./pages/rinks-catalogue.page').then((m) => m.RinksCataloguePageComponent) },
       { path: 'pistas/:id', loadComponent: () => import('./pages/rink-detail.page').then((m) => m.RinkDetailPageComponent) },
       { path: 'pistas/:id/resena', canActivate: [authGuard], loadComponent: () => import('./pages/review-form.page').then((m) => m.ReviewFormPageComponent) },

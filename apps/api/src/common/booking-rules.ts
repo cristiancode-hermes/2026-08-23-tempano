@@ -110,49 +110,7 @@ export function validateSkateCoverage(
   return { ok: true };
 }
 
-export function buildQrPlaceholderSvg(token: string, code: string): string {
-  const cells = 21;
-  const size = 168;
-  const cell = size / cells;
-  let rects = '';
-  for (let y = 0; y < cells; y++) {
-    for (let x = 0; x < cells; x++) {
-      const h = hashByte(token, x, y);
-      const finder =
-        (x < 7 && y < 7) || (x >= cells - 7 && y < 7) || (x < 7 && y >= cells - 7);
-      const on = finder ? finderOn(x, y, cells) : h % 2 === 0;
-      if (on) {
-        rects += `<rect x="${(x * cell).toFixed(2)}" y="${(y * cell).toFixed(2)}" width="${cell.toFixed(2)}" height="${cell.toFixed(2)}" fill="#12242C"/>`;
-      }
-    }
-  }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size + 28}" width="${size}" height="${size + 28}" role="img" aria-label="QR ${code}"><rect width="100%" height="100%" fill="#fff"/>${rects}<text x="${size / 2}" y="${size + 18}" text-anchor="middle" font-family="monospace" font-size="12" fill="#12242C">${code}</text></svg>`;
-}
-
-function hashByte(token: string, x: number, y: number): number {
-  let h = 0;
-  const s = `${token}:${x},${y}`;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-  return h;
-}
-
-function finderOn(x: number, y: number, cells: number): boolean {
-  const regions = [
-    [0, 0],
-    [cells - 7, 0],
-    [0, cells - 7],
-  ];
-  for (const [ox, oy] of regions) {
-    const lx = x - ox;
-    const ly = y - oy;
-    if (lx >= 0 && lx < 7 && ly >= 0 && ly < 7) {
-      if (lx === 0 || ly === 0 || lx === 6 || ly === 6) return true;
-      if (lx >= 2 && lx <= 4 && ly >= 2 && ly <= 4) return true;
-      return false;
-    }
-  }
-  return false;
-}
+export { buildSessionQrSvg, extractTicketCode, sessionTicketUrl, webOrigin } from './qr';
 
 export function madridDate(d = new Date()): string {
   return new Intl.DateTimeFormat('en-CA', {

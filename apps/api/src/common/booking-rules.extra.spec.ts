@@ -1,10 +1,12 @@
 import {
-  buildQrPlaceholderSvg,
+  buildSessionQrSvg,
   canCancelByPolicy,
-  endTimeOf,
+  extractTicketCode,
   hoursUntil,
   madridDate,
+  sessionTicketUrl,
   SLOT_HOURS,
+  endTimeOf,
 } from './booking-rules';
 
 describe('booking-rules extras', () => {
@@ -18,9 +20,21 @@ describe('booking-rules extras', () => {
     expect(hoursUntil(future)).toBeGreaterThan(47);
   });
 
-  it('QR is deterministic', () => {
-    expect(buildQrPlaceholderSvg('TP-ABC', 'TP-ABC')).toBe(buildQrPlaceholderSvg('TP-ABC', 'TP-ABC'));
-    expect(buildQrPlaceholderSvg('TP-ABC', 'TP-ABC')).toContain('<svg');
+  it('QR encodes the session URL and is deterministic', async () => {
+    const url = sessionTicketUrl('TP-ABC');
+    expect(url).toContain('/sesion/TP-ABC');
+    const a = await buildSessionQrSvg(url, 'TP-ABC');
+    const b = await buildSessionQrSvg(url, 'TP-ABC');
+    expect(a).toBe(b);
+    expect(a).toContain('<svg');
+    expect(a).toContain(url);
+  });
+
+  it('extractTicketCode accepts URL or bare code', () => {
+    expect(extractTicketCode('tp-seed01')).toBe('TP-SEED01');
+    expect(extractTicketCode('https://tempano.proyectos.cristiancode.dev/sesion/TP-SEED01')).toBe(
+      'TP-SEED01',
+    );
   });
 
   it('slots 10:00–21:00', () => {

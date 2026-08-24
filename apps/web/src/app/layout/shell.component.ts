@@ -27,8 +27,12 @@ import { ThemeService } from '../core/theme.service';
               <li><a routerLink="/staff" routerLinkActive="active" (click)="closeMenu()">Staff</a></li>
             }
             <li class="nav-drawer-actions">
-              <button type="button" class="btn btn-ghost btn-sm" (click)="theme.toggle()">
-                {{ theme.isDark() ? 'Claro' : 'Oscuro' }}
+              <button type="button" class="theme-toggle" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'">
+                @if (theme.isDark()) {
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12Zm0 3.25a.75.75 0 0 0 .75-.75v-1a.75.75 0 0 0-1.5 0v1c0 .41.34.75.75.75Zm0-15.5a.75.75 0 0 0 .75-.75v-1a.75.75 0 0 0-1.5 0v1c0 .41.34.75.75.75ZM5.47 18.53a.75.75 0 0 0 1.06 0l.71-.7a.75.75 0 1 0-1.06-1.07l-.71.71a.75.75 0 0 0 0 1.06Zm11.29-11.3a.75.75 0 0 0 1.06 0l.71-.7a.75.75 0 1 0-1.06-1.07l-.71.71a.75.75 0 0 0 0 1.06ZM3.5 12.75h1a.75.75 0 0 0 0-1.5h-1a.75.75 0 0 0 0 1.5Zm15 0h1a.75.75 0 0 0 0-1.5h-1a.75.75 0 0 0 0 1.5ZM5.47 5.47a.75.75 0 0 0 0 1.06l.71.71A.75.75 0 1 0 7.24 6.17l-.71-.71a.75.75 0 0 0-1.06 0Zm11.29 11.3a.75.75 0 0 0 0 1.06l.71.71a.75.75 0 1 0 1.06-1.06l-.71-.71a.75.75 0 0 0-1.06 0Z"/></svg>
+                } @else {
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.5 13.5A7.5 7.5 0 0 1 10 4.07 8.5 8.5 0 1 0 19.93 14 7.46 7.46 0 0 1 16.5 13.5Z"/></svg>
+                }
               </button>
               @if (auth.getToken()) {
                 <button type="button" class="btn btn-secondary btn-sm" (click)="auth.logout(); closeMenu()">Salir</button>
@@ -39,8 +43,12 @@ import { ThemeService } from '../core/theme.service';
             </li>
           </ul>
           <div class="nav-actions desktop-only">
-            <button type="button" class="btn btn-ghost btn-sm" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'">
-              {{ theme.isDark() ? 'Claro' : 'Oscuro' }}
+            <button type="button" class="theme-toggle" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'">
+              @if (theme.isDark()) {
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12Zm0 3.25a.75.75 0 0 0 .75-.75v-1a.75.75 0 0 0-1.5 0v1c0 .41.34.75.75.75Zm0-15.5a.75.75 0 0 0 .75-.75v-1a.75.75 0 0 0-1.5 0v1c0 .41.34.75.75.75ZM5.47 18.53a.75.75 0 0 0 1.06 0l.71-.7a.75.75 0 1 0-1.06-1.07l-.71.71a.75.75 0 0 0 0 1.06Zm11.29-11.3a.75.75 0 0 0 1.06 0l.71-.7a.75.75 0 1 0-1.06-1.07l-.71.71a.75.75 0 0 0 0 1.06ZM3.5 12.75h1a.75.75 0 0 0 0-1.5h-1a.75.75 0 0 0 0 1.5Zm15 0h1a.75.75 0 0 0 0-1.5h-1a.75.75 0 0 0 0 1.5ZM5.47 5.47a.75.75 0 0 0 0 1.06l.71.71A.75.75 0 1 0 7.24 6.17l-.71-.71a.75.75 0 0 0-1.06 0Zm11.29 11.3a.75.75 0 0 0 0 1.06l.71.71a.75.75 0 1 0 1.06-1.06l-.71-.71a.75.75 0 0 0-1.06 0Z"/></svg>
+              } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.5 13.5A7.5 7.5 0 0 1 10 4.07 8.5 8.5 0 1 0 19.93 14 7.46 7.46 0 0 1 16.5 13.5Z"/></svg>
+              }
             </button>
             @if (auth.getToken()) {
               <span class="user-chip">

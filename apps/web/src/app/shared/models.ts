@@ -87,6 +87,7 @@ export interface Booking {
   totalCents: number;
   expiresAt?: string | null;
   qrSvg?: string | null;
+  qrUrl?: string | null;
   rink?: Partial<Rink> | null;
   slot?: Partial<SlotView> | null;
   lines?: BookingLine[];

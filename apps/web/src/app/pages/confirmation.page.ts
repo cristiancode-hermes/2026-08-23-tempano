@@ -16,6 +16,9 @@ import { FormatBase } from '../shared/format';
         @if (qr()) {
           <div class="qr-box" [innerHTML]="qr()"></div>
         }
+        @if (b.qrUrl) {
+          <p class="text-sm"><a [href]="b.qrUrl">{{ b.qrUrl }}</a></p>
+        }
         <p class="total">{{ eur(b.totalCents) }}</p>
         <a class="btn btn-primary" [routerLink]="['/mis-sesiones', b.id]">Ver detalle</a>
       }

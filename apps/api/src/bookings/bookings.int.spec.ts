@@ -204,6 +204,8 @@ describe('BookingsService transactional', () => {
     const confirmed = await svc.confirm(player.id, hold.booking.id);
     expect(confirmed.code).toMatch(/^TP-/);
     expect(confirmed.qrSvg).toContain('<svg');
+    expect(confirmed.qrUrl).toContain(`/sesion/${confirmed.code}`);
+    expect(confirmed.qrSvg).toContain(confirmed.qrUrl);
     expect(confirmed.status).toBe('confirmed');
   });
 

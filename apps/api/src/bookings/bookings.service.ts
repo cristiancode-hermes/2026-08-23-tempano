@@ -30,7 +30,9 @@ import {
   CANCEL_HOURS,
   HOLD_MINUTES,
   RENTAL_CENTS,
-  buildQrPlaceholderSvg,
+  buildSessionQrSvg,
+  extractTicketCode,
+  sessionTicketUrl,
   canCancelByPolicy,
   canFitParty,
   canReserveSize,
@@ -302,7 +304,7 @@ export class BookingsService implements OnModuleInit, OnModuleDestroy {
         throw new ConflictException('Transición inválida');
       }
       const code = this.makeCode();
-      const qrSvg = buildQrPlaceholderSvg(code, code);
+      const qrSvg = await this.renderQr(code);
       pre.status = 'confirmed';
       pre.expiresAt = null;
       pre.code = code;
@@ -395,12 +397,34 @@ export class BookingsService implements OnModuleInit, OnModuleDestroy {
     });
     if (!b) throw new NotFoundException('Reserva no encontrada');
     if (!asStaff && b.userId !== userId) throw new ForbiddenException('No es tu reserva');
-    return this.serialize(b);
+    return this.serialize(await this.ensureQr(b));
+  }
+
+  async getPublicByCode(code: string) {
+    const normalized = extractTicketCode(code);
+    if (!normalized) throw new NotFoundException('Sesión no encontrada');
+    const b = await this.bookings.findOne({
+      where: { code: normalized },
+      relations: { slot: true, rink: true },
+    });
+    if (!b) throw new NotFoundException('Sesión no encontrada');
+    const fresh = await this.ensureQr(b);
+    const view = this.serialize(fresh);
+    return {
+      id: view.id,
+      code: view.code,
+      status: view.status,
+      partySize: view.partySize,
+      qrSvg: view.qrSvg,
+      qrUrl: view.qrUrl,
+      slot: view.slot,
+      rink: view.rink,
+    };
   }
 
   async checkIn(staffUserId: number, code: string) {
     return this.mutex.run(async () => {
-      const normalized = String(code || '').trim().toUpperCase();
+      const normalized = extractTicketCode(code);
       const b = await this.bookings.findOne({ where: { code: normalized } });
       if (!b) throw new NotFoundException('Código no encontrado');
       if (b.status === 'checked_in' || b.status === 'completed') {
@@ -518,7 +542,20 @@ export class BookingsService implements OnModuleInit, OnModuleDestroy {
       relations: { lines: true, slot: true, rink: true, rentals: { skateSize: true }, checkIn: true },
     });
     if (!b) throw new NotFoundException('Reserva no encontrada');
-    return this.serialize(b);
+    return this.serialize(await this.ensureQr(b));
+  }
+
+  private async renderQr(code: string): Promise<string> {
+    return buildSessionQrSvg(sessionTicketUrl(code), code);
+  }
+
+  private async ensureQr(b: Booking): Promise<Booking> {
+    if (!b.code) return b;
+    const url = sessionTicketUrl(b.code);
+    if (b.qrSvg && b.qrSvg.includes(url)) return b;
+    b.qrSvg = await this.renderQr(b.code);
+    await this.bookings.save(b);
+    return b;
   }
 
   serialize(b: Booking) {
@@ -543,6 +580,7 @@ export class BookingsService implements OnModuleInit, OnModuleDestroy {
       expiresAt: b.expiresAt ? new Date(b.expiresAt).toISOString() : null,
       code: b.code,
       qrSvg: b.qrSvg,
+      qrUrl: b.code ? sessionTicketUrl(b.code) : null,
       confirmedAt: b.confirmedAt,
       createdAt: b.createdAt,
       slot: b.slot

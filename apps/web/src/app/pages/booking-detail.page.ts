@@ -21,6 +21,9 @@ import { STATUS_LABELS } from '../shared/models';
         </ul>
         <p class="total">{{ eur(b.totalCents) }}</p>
         @if (qr()) { <div class="qr-box" [innerHTML]="qr()"></div> }
+        @if (b.qrUrl) {
+          <p class="text-sm"><a [href]="b.qrUrl">{{ b.qrUrl }}</a></p>
+        }
         @if (b.status === 'pending' || b.status === 'confirmed') {
           <button class="btn btn-danger" type="button" (click)="cancel()">Cancelar</button>
         }

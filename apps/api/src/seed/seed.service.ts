@@ -19,11 +19,12 @@ import {
   RENTAL_CENTS,
   SLOT_HOURS,
   addDaysYmd,
-  buildQrPlaceholderSvg,
+  buildSessionQrSvg,
   endTimeOf,
   madridDate,
   parseMadridLocal,
   pointsForCompleted,
+  sessionTicketUrl,
 } from '../common/booking-rules';
 
 const ICE_PHOTOS = {
@@ -177,7 +178,7 @@ export class SeedService implements OnModuleInit {
       totalCents: 0,
       expiresAt: null,
       code: 'TP-SEED01',
-      qrSvg: buildQrPlaceholderSvg('TP-SEED01', 'TP-SEED01'),
+      qrSvg: await buildSessionQrSvg(sessionTicketUrl('TP-SEED01'), 'TP-SEED01'),
       confirmedAt: new Date(Date.now() - 36 * 3600_000),
       completedAt: new Date(Date.now() - 30 * 3600_000),
     } as any)) as Booking;

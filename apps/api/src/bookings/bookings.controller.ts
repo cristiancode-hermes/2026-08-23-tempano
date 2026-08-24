@@ -71,6 +71,11 @@ export class BookingsController {
     return this.bookings.listMine(user.userId, status);
   }
 
+  @Get('ticket/:code')
+  ticket(@Param('code') code: string) {
+    return this.bookings.getPublicByCode(code);
+  }
+
   @Get(':id')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
